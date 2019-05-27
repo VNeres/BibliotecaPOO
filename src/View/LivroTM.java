@@ -8,7 +8,7 @@ public class LivroTM extends AbstractTableModel {
 
     private List<Livro> linhas;
     private String[] colunas = new String[]{"Código", "Nome", "Autor", "Ano", "Disponível?"};
-    
+
     @Override
     public int getRowCount() {
         return linhas.size();
@@ -21,7 +21,7 @@ public class LivroTM extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int linha, int coluna) {
-        
+
         switch (coluna) {
             case 0:
                 return linhas.get(linha).getId();
@@ -39,8 +39,7 @@ public class LivroTM extends AbstractTableModel {
 
     @Override
     public void setValueAt(Object valor, int linha, int coluna) {
-        
-        
+
         switch (coluna) {
             case 0:
                 linhas.get(linha).setId(Integer.parseInt((String) valor));
@@ -59,6 +58,5 @@ public class LivroTM extends AbstractTableModel {
                 break;
         }
     }
-    
-    
+
 }
