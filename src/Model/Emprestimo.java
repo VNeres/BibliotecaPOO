@@ -17,6 +17,7 @@ public class Emprestimo {
         this.ID = ID;
         this.LivroEmprestado = LivroEmprestado;
         this.EmprestadoPara = EmprestadoPara;
+        this.DataEmprestimo = DataEmprestimo;
         this.DataDevolucao = DataDevolucao;
     }
     
