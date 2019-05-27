@@ -13,7 +13,7 @@ public class Emprestimo {
     public Emprestimo() {
     }
 
-    public Emprestimo(int ID, String LivroEmprestado, String EmprestadoPara, Date DataDevolucao) {
+    public Emprestimo(int ID, String LivroEmprestado, String EmprestadoPara, Date DataEmprestimo, Date DataDevolucao) {
         this.ID = ID;
         this.LivroEmprestado = LivroEmprestado;
         this.EmprestadoPara = EmprestadoPara;
