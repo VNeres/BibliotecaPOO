@@ -76,5 +76,39 @@ public class EmprestimoTM extends AbstractTableModel {
                 break;
         }
     }
+    
+    public void addEmprestimo(Emprestimo e) {
+        linhas.add(e);
+        fireTableDataChanged();
+    }
+
+    public void devolveEmprestimo(int indiceLinha) {
+        linhas.remove(indiceLinha);
+        fireTableRowsDeleted(indiceLinha, indiceLinha);
+    }
+
+    public Emprestimo getEmprestimo(int indiceLinha) {
+        return linhas.get(indiceLinha);
+    }
+
+    public List<Emprestimo> getEmprestimos() {
+        return linhas;
+    }
+
+    public void setLivros(List<Emprestimo> emprestimos) {
+        int tamanhoAntigo = this.getRowCount();
+
+        linhas.addAll(emprestimos);
+        fireTableRowsInserted(tamanhoAntigo, this.getRowCount() - 1);
+    }
+
+    public void limpar() {
+        linhas.clear();
+        fireTableDataChanged();
+    }
+    
+    public boolean isEmpty(){
+        return linhas.isEmpty();
+    }
 
 }

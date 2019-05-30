@@ -79,5 +79,39 @@ public class ClienteTM extends AbstractTableModel {
                 break;
         }
     }
+    
+    public void addCLiente(Cliente c) {
+        linhas.add(c);
+        fireTableDataChanged();
+    }
+
+    public void deleteCliente(int indiceLinha) {
+        linhas.remove(indiceLinha);
+        fireTableRowsDeleted(indiceLinha, indiceLinha);
+    }
+
+    public Cliente getCLiente(int indiceLinha) {
+        return linhas.get(indiceLinha);
+    }
+
+    public List<Cliente> getCliente() {
+        return linhas;
+    }
+
+    public void setLivros(List<Cliente> clientes) {
+        int tamanhoAntigo = this.getRowCount();
+
+        linhas.addAll(clientes);
+        fireTableRowsInserted(tamanhoAntigo, this.getRowCount() - 1);
+    }
+
+    public void limpar() {
+        linhas.clear();
+        fireTableDataChanged();
+    }
+    
+    public boolean isEmpty(){
+        return linhas.isEmpty();
+    }
 
 }

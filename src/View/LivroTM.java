@@ -88,4 +88,8 @@ public class LivroTM extends AbstractTableModel {
         linhas.clear();
         fireTableDataChanged();
     }
+    
+    public boolean isEmpty(){
+        return linhas.isEmpty();
+    }
 }   

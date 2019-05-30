@@ -53,6 +53,7 @@ public class ctrLivro implements ActionListener, ListSelectionListener {
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
+        Livro livro = tabModel.getLivros().get(frmLivros.)
     }
 
 }
