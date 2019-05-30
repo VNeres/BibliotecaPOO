@@ -59,4 +59,33 @@ public class LivroTM extends AbstractTableModel {
         }
     }
 
-}
+    public void addLivro(Livro l) {
+        linhas.add(l);
+        fireTableDataChanged();
+    }
+
+    public void deleteLivro(int indiceLinha) {
+        linhas.remove(indiceLinha);
+        fireTableRowsDeleted(indiceLinha, indiceLinha);
+    }
+
+    public Livro getLivro(int indiceLinha) {
+        return linhas.get(indiceLinha);
+    }
+
+    public List<Livro> getLivros() {
+        return linhas;
+    }
+
+    public void setLivros(List<Livro> livros) {
+        int tamanhoAntigo = this.getRowCount();
+
+        linhas.addAll(livros);
+        fireTableRowsInserted(tamanhoAntigo, this.getRowCount() - 1);
+    }
+
+    public void limpar() {
+        linhas.clear();
+        fireTableDataChanged();
+    }
+}   

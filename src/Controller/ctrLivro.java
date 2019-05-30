@@ -39,13 +39,20 @@ public class ctrLivro implements ActionListener, ListSelectionListener {
             alterarLivro();
         } else if (acao.getActionCommand().equals("Excluir")) {
             excluirlivro();
+        }else if(acao.getActionCommand().equals("Salvar")){
+            salvarVinho();
+        }else if (acao.getActionCommand().equals("Cancelar")){
+            cancelarLivro();
+        }else if (acao.getActionCommand().equals("Listar Todos")){
+            listarTodos();
+        }else if(acao.getActionCommand().equals("Pesquisar")){
+            pesquisarLivro();
         }
 
     }
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
