@@ -6,6 +6,9 @@
 package View;
 
 import Controller.ctrLivro;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -24,7 +27,7 @@ public class JFLivro extends javax.swing.JFrame {
     /**
      * Creates new form Livro
      */
-    public JFLivro() {
+    public JFLivro() throws SQLException {
         initComponents();
 
         setLocationRelativeTo(null);
@@ -293,7 +296,11 @@ public class JFLivro extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new JFLivro().setVisible(true);
+                try {
+                    new JFLivro().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(JFLivro.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }

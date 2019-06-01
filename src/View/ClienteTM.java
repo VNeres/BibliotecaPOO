@@ -98,7 +98,7 @@ public class ClienteTM extends AbstractTableModel {
         return linhas;
     }
 
-    public void setLivros(List<Cliente> clientes) {
+    public void setClientes(List<Cliente> clientes) {
         int tamanhoAntigo = this.getRowCount();
 
         linhas.addAll(clientes);

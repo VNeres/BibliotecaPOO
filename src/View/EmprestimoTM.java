@@ -38,11 +38,11 @@ public class EmprestimoTM extends AbstractTableModel {
 
         switch (coluna) {
             case 0:
-                return linhas.get(linha).getID();
+                return linhas.get(linha).getId();
             case 1:
-                return linhas.get(linha).getLivroEmprestado();
+                return linhas.get(linha).getIdCliente();
             case 2:
-                return linhas.get(linha).getEmprestadoPara();
+                return linhas.get(linha).getIdLivro();
             case 3:
                 return linhas.get(linha).getDataEmprestimo();
             case 4:
@@ -56,13 +56,13 @@ public class EmprestimoTM extends AbstractTableModel {
 
         switch (coluna) {
             case 0:
-                linhas.get(linha).setID(Integer.parseInt((String) valor));
+                linhas.get(linha).setId(Integer.parseInt((String) valor));
                 break;
             case 1:
-                linhas.get(linha).setLivroEmprestado((String) valor);
+                linhas.get(linha).setIdCliente(Integer.parseInt((String)valor));
                 break;
             case 2:
-                linhas.get(linha).setEmprestadoPara((String) valor);
+                linhas.get(linha).setIdLivro(Integer.parseInt((String) valor));
                 break;
             case 3:
                 linhas.get(linha).setDataEmprestimo(new Date());
@@ -95,7 +95,7 @@ public class EmprestimoTM extends AbstractTableModel {
         return linhas;
     }
 
-    public void setLivros(List<Emprestimo> emprestimos) {
+    public void setEmprestimos(List<Emprestimo> emprestimos) {
         int tamanhoAntigo = this.getRowCount();
 
         linhas.addAll(emprestimos);

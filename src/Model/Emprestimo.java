@@ -4,46 +4,45 @@ import java.util.Date;
 
 
 public class Emprestimo {
-    private int ID;
-    private String LivroEmprestado;
-    private String EmprestadoPara;
-    private Date DataEmprestimo = new Date();
+    private int Id;
+    private int idLivro;
+    private int idCliente;
+    private Date DataEmprestimo;
     private Date DataDevolucao;
 
     public Emprestimo() {
     }
 
-    public Emprestimo(int ID, String LivroEmprestado, String EmprestadoPara, Date DataEmprestimo, Date DataDevolucao) {
-        this.ID = ID;
-        this.LivroEmprestado = LivroEmprestado;
-        this.EmprestadoPara = EmprestadoPara;
-        this.DataEmprestimo = DataEmprestimo;
+    public Emprestimo(int Id, int idLivro, int idCliente, Date DataEmprestimo, Date DataDevolucao) {
+        this.Id = Id;
+        this.idLivro = idLivro;
+        this.idCliente = idCliente;
+        this.DataEmprestimo = new Date();
         this.DataDevolucao = DataDevolucao;
     }
-    
 
-    public int getID() {
-        return ID;
+    public int getId() {
+        return Id;
     }
 
-    public void setID(int ID) {
-        this.ID = ID;
+    public void setId(int Id) {
+        this.Id = Id;
     }
 
-    public String getLivroEmprestado() {
-        return LivroEmprestado;
+    public int getIdLivro() {
+        return idLivro;
     }
 
-    public void setLivroEmprestado(String LivroEmprestado) {
-        this.LivroEmprestado = LivroEmprestado;
+    public void setIdLivro(int idLivro) {
+        this.idLivro = idLivro;
     }
 
-    public String getEmprestadoPara() {
-        return EmprestadoPara;
+    public int getIdCliente() {
+        return idCliente;
     }
 
-    public void setEmprestadoPara(String EmprestadoPara) {
-        this.EmprestadoPara = EmprestadoPara;
+    public void setIdCliente(int idCliente) {
+        this.idCliente = idCliente;
     }
 
     public Date getDataEmprestimo() {
@@ -60,6 +59,8 @@ public class Emprestimo {
 
     public void setDataDevolucao(Date DataDevolucao) {
         this.DataDevolucao = DataDevolucao;
-    } 
+    }
+
+
     
 }

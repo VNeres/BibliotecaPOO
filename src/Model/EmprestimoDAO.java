@@ -29,11 +29,11 @@ public class EmprestimoDAO {
     }
     
     public int Inserir (Emprestimo emprestimo) throws SQLException{
-        String sql = "INSERT INTO Emprestimo (emprestado para, livro emprestado, data emprestimo, data devoluçao) values (?,?,?,?)";
+        String sql = "INSERT INTO Emprestimo (idLivro, idCliente, dataEmprestimo, dataDevolucao) values (?,?,?,?)";
         
         stm = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-        stm.setString(1, emprestimo.getEmprestadoPara());
-        stm.setString(2, emprestimo.getLivroEmprestado());
+        stm.setString(1, Integer.toString(emprestimo.getIdCliente()));
+        stm.setString(2, Integer.toString(emprestimo.getIdLivro()));
         stm.setDate(3, (Date) emprestimo.getDataEmprestimo());
         stm.setDate(4, (Date) emprestimo.getDataDevolucao());
         
@@ -43,21 +43,20 @@ public class EmprestimoDAO {
         
         //atualiza o atributo codigo (autoincremento) do objeto instanciado
         if (rs.next()){
-            emprestimo.setID(rs.getInt(1));
+            emprestimo.setId(rs.getInt(1));
         }
         
-        return emprestimo.getID();
+        return emprestimo.getId();
     }
     
     public void Alterar(Emprestimo emprestimo) throws SQLException{
-        String sql = "UPDATE Emprestimo set emprestado para = ?, livro emprestado = ?, data emprestimo = ?, data devoluçao = ? WHERE id = ?";
+        String sql = "UPDATE Emprestimo set idCliente = ?, idLivro = ?, dataDevolucao = ? WHERE id = ?";
         
         stm = con.prepareStatement(sql);
-        stm.setString(1, emprestimo.getEmprestadoPara());
-        stm.setString(2, emprestimo.getLivroEmprestado());
-        stm.setDate(3, (Date) emprestimo.getDataEmprestimo());
-        stm.setDate(4, (Date) emprestimo.getDataDevolucao());
-        stm.setInt(5, emprestimo.getID());
+        stm.setString(1, Integer.toString(emprestimo.getIdCliente()));
+        stm.setString(2, Integer.toString(emprestimo.getIdLivro()));
+        stm.setDate(3, (Date) emprestimo.getDataDevolucao());
+        stm.setInt(4, emprestimo.getId());
         
         stm.executeUpdate();   
     }
@@ -67,7 +66,7 @@ public class EmprestimoDAO {
         String sql = "DELETE FROM Emprestimo WHERE id = ?";
         
         stm = con.prepareStatement(sql);
-        stm.setInt(1, emprestimo.getID());
+        stm.setInt(1, emprestimo.getId());
         
          stm.executeUpdate();
     }
@@ -77,18 +76,37 @@ public class EmprestimoDAO {
         
         ArrayList<Emprestimo> emprestimos = new ArrayList<Emprestimo>();
         
-        String sql = "SELECT * FROM Emprestimo";
+        String sql = "SELECT * FROM Emprestimo E INNER JOIN Cliente C ON E.idCliente = C.Id LEFT JOIN Livro L ON E.idLivro = L.Id";
         
         stm = con.prepareStatement(sql);
         rs = stm.executeQuery();
         
         while(rs.next()){
             emprestimos.add(new Emprestimo(rs.getInt(1),
-                                rs.getString(2),
-                                rs.getString(3),
-                                rs.getDate(4), 
+                                rs.getInt(2),
+                                rs.getInt(3),
+                                rs.getDate(4),
                                 rs.getDate(5)));
         }
         return emprestimos;
+    }
+    
+        public Emprestimo localizarEmprestimo(String locEmprestimo) throws SQLException{
+        
+        String sql = "SELECT * FROM emprestimo WHERE  id like %?% or idLivro like %?% or idCliente like %?% or dataEmprestimo like %?% or dataDevolucao like %?% ";
+        stm = con.prepareStatement(sql);
+        stm.setString(1, locEmprestimo);
+        stm.setString(2, locEmprestimo);
+        stm.setString(3, locEmprestimo);
+        stm.setString(4, locEmprestimo);
+        stm.setString(5, locEmprestimo);
+        
+        rs = stm.executeQuery();
+        Emprestimo emprestimo = new Emprestimo(rs.getInt(1),
+                                rs.getInt(2),
+                                rs.getInt(3),
+                                rs.getDate(4),
+                                rs.getDate(5));
+        return emprestimo;
     }
 }

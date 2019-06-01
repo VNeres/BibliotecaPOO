@@ -34,7 +34,7 @@ public class ClienteDAO {
     }
     
     public int Inserir (Cliente cliente) throws SQLException{
-        String sql = "INSERT INTO VINHO (nome, telefone, RG, Data Nascimento) values (?,?,?,?)";
+        String sql = "INSERT INTO cliente (nome, telefone, rg, dataNascimento) values (?,?,?,?)";
         
         stm = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
         stm.setString(1, cliente.getNome());
@@ -55,7 +55,7 @@ public class ClienteDAO {
     }
     
     public void Alterar(Cliente cliente) throws SQLException{
-        String sql = "UPDATE VINHO set nome = ?, telefone = ?, rg = ?, data nascimento = ? WHERE id = ?";
+        String sql = "UPDATE cliente set nome = ?, telefone = ?, rg = ?, dataNascimento = ? WHERE id = ?";
         
         stm = con.prepareStatement(sql);
         stm.setString(1, cliente.getNome());

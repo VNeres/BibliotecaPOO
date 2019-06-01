@@ -36,7 +36,7 @@ public class ctrCliente implements ActionListener, ListSelectionListener {
 
     private char flagInsAltCons = 'C';
 
-    public ctrCliente() {
+    public ctrCliente() throws SQLException {
     }
 
     public ctrCliente(JFCliente frmClientes) {
@@ -154,7 +154,7 @@ public class ctrCliente implements ActionListener, ListSelectionListener {
 
     private void listarTodos() throws SQLException {
         tabModel.limpar();
-        tabModel.setLivros(dao.ListaClientes());
+        tabModel.setClientes(dao.ListaClientes());
         frmClientes.getBtAlterar().setEnabled(true);
         frmClientes.getBtExcluir().setEnabled(true);
     }

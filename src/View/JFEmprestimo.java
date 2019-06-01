@@ -5,6 +5,9 @@
  */
 package View;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -19,11 +22,17 @@ import javax.swing.JTextField;
  */
 public class JFEmprestimo extends javax.swing.JFrame {
 
+    private JFCliente jfcliente;
+    private JFLivro jflivro;
+
     /**
      * Creates new form Biblioteca
      */
-    public JFEmprestimo() {
+    public JFEmprestimo() throws SQLException {
         initComponents();
+        this.jfcliente = new JFCliente();
+        this.jflivro = new JFLivro();
+
     }
 
     /**
@@ -48,6 +57,7 @@ public class JFEmprestimo extends javax.swing.JFrame {
         comboLivro = new javax.swing.JComboBox();
         lblDataDevolucao = new javax.swing.JLabel();
         txtDatavDevolucao = new javax.swing.JTextField();
+        lblCodigo = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbEmprestimo = new javax.swing.JTable();
@@ -119,6 +129,8 @@ public class JFEmprestimo extends javax.swing.JFrame {
 
         txtDatavDevolucao.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
 
+        lblCodigo.setText("Código:");
+
         javax.swing.GroupLayout paEmprestimoLayout = new javax.swing.GroupLayout(paEmprestimo);
         paEmprestimo.setLayout(paEmprestimoLayout);
         paEmprestimoLayout.setHorizontalGroup(
@@ -132,7 +144,8 @@ public class JFEmprestimo extends javax.swing.JFrame {
                         .addComponent(comboLivro, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())
                     .addGroup(paEmprestimoLayout.createSequentialGroup()
-                        .addGap(57, 57, 57)
+                        .addComponent(lblCodigo)
+                        .addGap(16, 16, 16)
                         .addComponent(lblNomeCliente)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(lblNomeLivro)
@@ -145,12 +158,18 @@ public class JFEmprestimo extends javax.swing.JFrame {
         );
         paEmprestimoLayout.setVerticalGroup(
             paEmprestimoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(paEmprestimoLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(paEmprestimoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblNomeCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblNomeLivro))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, paEmprestimoLayout.createSequentialGroup()
+                .addGroup(paEmprestimoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(paEmprestimoLayout.createSequentialGroup()
+                        .addContainerGap(25, Short.MAX_VALUE)
+                        .addGroup(paEmprestimoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblNomeCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblNomeLivro))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                    .addGroup(paEmprestimoLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(lblCodigo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(paEmprestimoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(comboCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(comboLivro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -158,7 +177,7 @@ public class JFEmprestimo extends javax.swing.JFrame {
                 .addGroup(paEmprestimoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblDataDevolucao)
                     .addComponent(txtDatavDevolucao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
@@ -201,10 +220,20 @@ public class JFEmprestimo extends javax.swing.JFrame {
         btJfCliente.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         btJfCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/book-with-add-button.png"))); // NOI18N
         btJfCliente.setText("Adicionar novo Cliente");
+        btJfCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btJfClienteActionPerformed(evt);
+            }
+        });
 
         btJfLivro.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         btJfLivro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/new-user.png"))); // NOI18N
         btJfLivro.setText("Adicionar novo Livro");
+        btJfLivro.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btJfLivroActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -253,7 +282,7 @@ public class JFEmprestimo extends javax.swing.JFrame {
                     .addComponent(btJfLivro, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(21, 21, 21)
                 .addComponent(paEmprestimo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36)
+                .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPesquisar)
                     .addComponent(txtPesquisar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -267,8 +296,16 @@ public class JFEmprestimo extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        // TODO add your handling code here:
+       
     }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btJfClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btJfClienteActionPerformed
+        jfcliente.setVisible(true);
+    }//GEN-LAST:event_btJfClienteActionPerformed
+
+    private void btJfLivroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btJfLivroActionPerformed
+        jflivro.setVisible(true);
+    }//GEN-LAST:event_btJfLivroActionPerformed
 
     /**
      * @param args the command line arguments
@@ -279,6 +316,7 @@ public class JFEmprestimo extends javax.swing.JFrame {
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
+
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Windows".equals(info.getName())) {
@@ -303,7 +341,11 @@ public class JFEmprestimo extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new JFEmprestimo().setVisible(true);
+                try {
+                    new JFEmprestimo().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(JFEmprestimo.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
@@ -322,6 +364,7 @@ public class JFEmprestimo extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblCodigo;
     private javax.swing.JLabel lblDataDevolucao;
     private javax.swing.JLabel lblNomeCliente;
     private javax.swing.JLabel lblNomeLivro;
@@ -331,6 +374,14 @@ public class JFEmprestimo extends javax.swing.JFrame {
     private javax.swing.JTextField txtDatavDevolucao;
     private javax.swing.JTextField txtPesquisar;
     // End of variables declaration//GEN-END:variables
+
+    public JLabel getLblCodigo() {
+        return lblCodigo;
+    }
+
+    public void setLblCodigo(JLabel lblCodigo) {
+        this.lblCodigo = lblCodigo;
+    }
 
     public JButton getBtAlterar() {
         return btAlterar;
@@ -499,6 +550,5 @@ public class JFEmprestimo extends javax.swing.JFrame {
     public void setTxtPesquisar(JTextField txtPesquisar) {
         this.txtPesquisar = txtPesquisar;
     }
-
 
 }

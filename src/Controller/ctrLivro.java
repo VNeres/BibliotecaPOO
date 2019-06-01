@@ -35,7 +35,6 @@ public class ctrLivro implements ActionListener, ListSelectionListener {
     private char flagInsAltCons = 'C';
 
     public ctrLivro() throws SQLException {
-        listarTodos();
     }
 
     public ctrLivro(JFLivro frmLivros) {

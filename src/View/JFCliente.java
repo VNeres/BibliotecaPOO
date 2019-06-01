@@ -5,6 +5,11 @@
  */
 package View;
 
+import Controller.ctrCliente;
+import java.awt.event.ActionEvent;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -17,12 +22,18 @@ import javax.swing.JTextField;
  * @author vande
  */
 public class JFCliente extends javax.swing.JFrame {
-
+    private ctrCliente listener;
+    private JButton adicionar = new JButton("Incluir");
     /**
      * Creates new form Cliente
      */
-    public JFCliente() {
+    public JFCliente() throws SQLException {
         initComponents();
+ 
+        setLocationRelativeTo(null);
+        
+        listener = new ctrCliente();
+              
     }
 
     /**
@@ -210,6 +221,11 @@ public class JFCliente extends javax.swing.JFrame {
         btAlterar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btAlterar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/edit24.png"))); // NOI18N
         btAlterar.setText("Alterar");
+        btAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btAlterarActionPerformed(evt);
+            }
+        });
 
         btExcluir.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagens/delete24.png"))); // NOI18N
@@ -276,8 +292,14 @@ public class JFCliente extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAdicionarActionPerformed
-        // TODO add your handling code here:
+        //Adicionar método
+        
     }//GEN-LAST:event_btAdicionarActionPerformed
+
+    private void btAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAlterarActionPerformed
+        //Adicionar método
+        
+    }//GEN-LAST:event_btAlterarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -312,7 +334,11 @@ public class JFCliente extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new JFCliente().setVisible(true);
+                try {
+                    new JFCliente().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(JFCliente.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
