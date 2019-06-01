@@ -90,7 +90,7 @@ public class ClienteTM extends AbstractTableModel {
         fireTableRowsDeleted(indiceLinha, indiceLinha);
     }
 
-    public Cliente getCLiente(int indiceLinha) {
+    public Cliente getCliente(int indiceLinha) {
         return linhas.get(indiceLinha);
     }
 
