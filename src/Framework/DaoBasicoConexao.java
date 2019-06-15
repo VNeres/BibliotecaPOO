@@ -22,8 +22,13 @@ public class DaoBasicoConexao {
     //nome do driver fornecido pela documentação do fabricante
     private String driver = "com.mysql.jdbc.Driver";
     
-    //Fonte de dados, usuário e senha para a conexão ao DB
-    private String url = "jdbc:mysql://localhost:3306/biblioteca";
+    /*
+     * Observe que foi retirada a porta, devido ao banco funcionar diferente
+     * em casa, porém, caso houver problemas, adicionar após o "localhost":
+     * localhost:8080 ou localhost:3306
+     * Will.
+     */
+    private String url = "jdbc:mysql://localhost/biblioteca";
     private String usuario = "root";
     private String senha = "";
     

@@ -1,19 +1,17 @@
 package Model;
 
-import java.util.Date;
-
 public class Cliente {
 
     private int Id;
     private String Nome;
     private String Telefone;
     private String Rg;
-    private Date DataNascimento;
+    private String DataNascimento;
 
     public Cliente() {
     }
 
-    public Cliente(int Id, String Nome, String Telefone, String Rg, Date DataNascimento) {
+    public Cliente(int Id, String Nome, String Telefone, String Rg, String DataNascimento) {
         this.Id = Id;
         this.Nome = Nome;
         this.Telefone = Telefone;
@@ -49,18 +47,21 @@ public class Cliente {
         return Rg;
     }
 
+    @Override
+    public String toString() {
+        return "Cliente{" + "Id=" + Id + ", Nome=" + Nome + ", Telefone=" + Telefone + ", Rg=" + Rg + ", DataNascimento=" + DataNascimento + '}';
+    }
+
     public void setRg(String Rg) {
         this.Rg = Rg;
     }
 
-    public Date getDataNascimento() {
+    public String getDataNascimento() {
         return DataNascimento;
     }
 
-    public void setDataNascimento(Date DataNascimento) {
+    public void setDataNascimento(String DataNascimento) {
         this.DataNascimento = DataNascimento;
     }
-    
-    
-    
+
 }

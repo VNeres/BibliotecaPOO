@@ -5,16 +5,21 @@
  */
 package Controller;
 
+import Model.Cliente;
 import Model.Emprestimo;
 import Model.EmprestimoDAO;
+import Model.Livro;
+import View.ClienteTM;
 import View.EmprestimoTM;
 import View.JFEmprestimo;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -23,18 +28,41 @@ import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+
 /**
  *
  * @author vande
  */
-public class ctrEmprestimo implements ActionListener, ListSelectionListener {
+
+/*
+ *Data de empréstimo é a do sistema(data atual)
+ */
+public class ctrEmprestimo extends ClienteTM implements ActionListener, ListSelectionListener {
 
     private JFEmprestimo frmEmprestimos;
     private EmprestimoTM tabModel;
+    private Cliente cliente;
+    private Livro livro;
+    private int id;
+    private LocalDate hoje = LocalDate.now();
+    private Date date2 = java.sql.Date.valueOf(hoje);
+    
+    
 
     private EmprestimoDAO dao = new EmprestimoDAO();
+    
+    /*
+     *  Operações:
+     *  N = nenhuma(padrão)
+     *  A = adicionar
+     *  M = muda(alterar)
+     *  E = excluir
+     *  B = buscar
+     *  L = Listar
+     * Will.
+     */
 
-    private char flagInsAltCons = 'C';
+    private char operacao = 'N';
 
     public ctrEmprestimo() throws SQLException {
         listarTodos();
@@ -49,21 +77,19 @@ public class ctrEmprestimo implements ActionListener, ListSelectionListener {
     @Override
     public void actionPerformed(ActionEvent acao) {
 
-        if (acao.getActionCommand().equals("Incluir")) {
-            incluirEmprestimo();
-        } else if (acao.getActionCommand().equals("Alterar")) {
-            alterarEmprestimo();
-        } else if (acao.getActionCommand().equals("Excluir")) {
+        if (acao.getActionCommand().equals("Emprestar")) {
             try {
-                excluirEmprestimo();
+                incluirEmprestimo();
             } catch (SQLException ex) {
-                Logger.getLogger(ctrLivro.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ctrEmprestimo.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ParseException ex) {
                 Logger.getLogger(ctrEmprestimo.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else if (acao.getActionCommand().equals("Salvar")) {
+        } else if (acao.getActionCommand().equals("Alterar")) {
+            
+        } else if (acao.getActionCommand().equals("Excluir")) {
             try {
-                salvarEmprestimo();
+                excluirEmprestimo();
             } catch (SQLException ex) {
                 Logger.getLogger(ctrLivro.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ParseException ex) {
@@ -75,14 +101,25 @@ public class ctrEmprestimo implements ActionListener, ListSelectionListener {
             } catch (SQLException ex) {
                 Logger.getLogger(ctrLivro.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else if (acao.getActionCommand().equals("Pesquisar")) {
+        } else if (acao.getActionCommand().equals("Buscar")) {
             try {
-                pesquisarEmprestimo();
+                pesquisarLivro();
+            } catch (SQLException ex) {
+                Logger.getLogger(ctrLivro.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else if (acao.getActionCommand().equals("Pesquisar Cliente")) {
+            try {
+                pesquisarCliente();
+            } catch (SQLException ex) {
+                Logger.getLogger(ctrLivro.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else if (acao.getActionCommand().equals("Pesquisar Livro")) {
+            try {
+                pesquisarLivro();
             } catch (SQLException ex) {
                 Logger.getLogger(ctrLivro.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
     }
 
     @Override
@@ -102,23 +139,17 @@ public class ctrEmprestimo implements ActionListener, ListSelectionListener {
         frmEmprestimos.getBtAlterar().addActionListener(this);
         frmEmprestimos.getBtnBuscar().addActionListener(this);
         frmEmprestimos.getBtDevolver().addActionListener(this);
+        frmEmprestimos.getBtnPesquisarLivro().addActionListener(this);
+        frmEmprestimos.getBtnPesquisarCliente().addActionListener(this);
         frmEmprestimos.getTbEmprestimo().getSelectionModel().addListSelectionListener(this);
     }
 
-    private void incluirEmprestimo() {
-        habilitaBotoesSalvar();
-
-        limparCampos(frmEmprestimos.getPaEmprestimo());
-        flagInsAltCons = 'I';
-
-    }
-
-    private void alterarEmprestimo() {
+  /*  private void alterarEmprestimo() {
         if ("".equals(frmEmprestimos.getLblCodigo().getText())) {
             habilitaBotoesSalvar();
             flagInsAltCons = 'A';
         }
-    }
+    }*/
 
     private void excluirEmprestimo() throws SQLException, ParseException {
 
@@ -134,17 +165,15 @@ public class ctrEmprestimo implements ActionListener, ListSelectionListener {
         }
     }
 
-    private void salvarEmprestimo() throws SQLException, ParseException{
-        if(flagInsAltCons == 'I'){
+    private void incluirEmprestimo() throws SQLException, ParseException{
+        operacao = 'A';
+        
+        if(operacao == 'A'){
             int codLivro;
             codLivro = dao.Inserir(dadosFrmEmprestimo());
             frmEmprestimos.getLblCodigo().setText(Integer.toString(codLivro));
+            operacao = 'a';
             tabModel.addEmprestimo(dadosFrmEmprestimo());
-        }else{
-            dao.Alterar(dadosFrmEmprestimo());
-            tabModel.setValueAt(frmEmprestimos.getComboCliente().getSelectedItem().toString(),frmEmprestimos.getTbEmprestimo().getSelectedRow(), 1);
-            tabModel.setValueAt(frmEmprestimos.getComboLivro().getSelectedItem().toString(), frmEmprestimos.getTbEmprestimo().getSelectedRow(), 2);
-            tabModel.setValueAt(frmEmprestimos.getTxtDatavDevolucao().getText(), frmEmprestimos.getTbEmprestimo().getSelectedRow(), 3);
         }
     }
 
@@ -162,28 +191,26 @@ public class ctrEmprestimo implements ActionListener, ListSelectionListener {
         livro = dao.localizarEmprestimo(frmEmprestimos.getTxtPesquisar().getText());
         dadosEmprestimoFrm(livro);
     }
-
-    private void habilitaBotoesSalvar() {
-        habilitaDesailitaBotoes(true);
-        habilitaDesabilitaPainel(frmEmprestimos.getPaEmprestimo(), true);
+    
+    private void pesquisarCliente() throws SQLException {
+        cliente = dao.localizarCliente(frmEmprestimos.getTxtPesquisarCliente().getText());
+        frmEmprestimos.getTxtNomeCliente().setText(cliente.getNome());
+        //frmEmprestimos.getLblCodigo().setText(frmEmprestimos.getTxtPesquisar().getText());
+        System.out.println(cliente);
+        
+        
+    }
+    
+    private void pesquisarLivro() throws SQLException {
+        livro = dao.localizarLivro(Integer.parseInt(frmEmprestimos.getTxtPesquisarLivro().getText()));
+        frmEmprestimos.getTxtNomeLivro().setText(livro.getNome());
+        frmEmprestimos.getTxtNomeEditora().setText(livro.getEditora());
+        //frmEmprestimos.getLblCodigo().setText(frmEmprestimos.getTxtPesquisar().getText());
+        System.out.println(livro);
+        
+        
     }
 
-    private void habilitaDesailitaBotoes(boolean habilitado) {
-        frmEmprestimos.getBtEmprestar().setEnabled(!habilitado);
-        frmEmprestimos.getBtAlterar().setEnabled(!habilitado);
-        frmEmprestimos.getBtDevolver().setEnabled(!habilitado);
-
-    }
-
-    private void habilitaDesabilitaPainel(JPanel panel, boolean habilitado) {
-        Component[] componente = panel.getComponents();
-        for (Component comp : componente) {
-            if (comp instanceof JTextField) {
-                JTextField textField = (JTextField) comp;
-                textField.setEnabled(habilitado);
-            }
-        }
-    }
 
     private void limparCampos(JPanel panel) {
         Component[] componente = panel.getComponents();
@@ -196,20 +223,22 @@ public class ctrEmprestimo implements ActionListener, ListSelectionListener {
     }
 
     private void dadosEmprestimoFrm(Emprestimo emprestimo) {
+        id = emprestimo.getId();
         frmEmprestimos.getLblCodigo().setText("" + emprestimo.getId());
-        //frmEmprestimos.getComboLivro().setText(emprestimo.getIdCliente());
-        //frmEmprestimos.getTxtAnoLivro().setText(Integer.toString(livro.getAno()));
+        frmEmprestimos.getTxtNomeCliente().setText(cliente.getNome());
+        frmEmprestimos.getTxtNomeLivro().setText(livro.getNome());
     }
 
     private Emprestimo dadosFrmEmprestimo() throws ParseException {
         Emprestimo emprestimo = new Emprestimo();
-        if (flagInsAltCons == 'I'){
+        if (operacao == 'a') {
             emprestimo.setId(Integer.parseInt(frmEmprestimos.getLblCodigo().getText()));
+            emprestimo.setDataEmprestimo(date2);
         }
         
-        emprestimo.setIdCliente((int) frmEmprestimos.getComboCliente().getSelectedItem());
-        emprestimo.setIdLivro((int)(frmEmprestimos.getComboLivro().getSelectedItem()));
-        emprestimo.setDataDevolucao(new SimpleDateFormat("dd/MM/yyyy").parse(frmEmprestimos.getTxtDatavDevolucao().getText()));
+        emprestimo.setIdCliente(cliente.getId());
+        emprestimo.setIdLivro(livro.getId());
+        emprestimo.setDataDevolucao(frmEmprestimos.getTxtDataDevolucao().getText());
         
         return emprestimo;        
     }

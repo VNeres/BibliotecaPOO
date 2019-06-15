@@ -1,14 +1,23 @@
 package View;
 
 import Model.Livro;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 public class LivroTM extends AbstractTableModel {
 
     private List<Livro> linhas;
-    private String[] colunas = new String[]{"Código", "Nome", "Autor", "Ano", "Disponível?"};
+    private String[] colunas = new String[]{"Código", "Nome", "Autor", "Ano", "Editora", "Quantidade"};
 
+    public LivroTM() {
+        linhas = new ArrayList<Livro>();
+    }
+
+    public LivroTM(ArrayList<Livro> livros) {
+        linhas = new ArrayList<Livro>(livros);
+    }
+    
     @Override
     public int getRowCount() {
         return linhas.size();
@@ -32,7 +41,9 @@ public class LivroTM extends AbstractTableModel {
             case 3:
                 return linhas.get(linha).getAno();
             case 4:
-                return linhas.get(linha).isIsDisponivel();
+                return linhas.get(linha).getEditora();
+            case 5:
+                return linhas.get(linha).getQuantidade();
         }
         return null;
     }
@@ -42,7 +53,7 @@ public class LivroTM extends AbstractTableModel {
 
         switch (coluna) {
             case 0:
-                linhas.get(linha).setId(Integer.parseInt((String) valor));
+                linhas.get(linha).setId((int) valor);
                 break;
             case 1:
                 linhas.get(linha).setNome((String) valor);
@@ -51,16 +62,23 @@ public class LivroTM extends AbstractTableModel {
                 linhas.get(linha).setAutor((String) valor);
                 break;
             case 3:
-                linhas.get(linha).setAno(Integer.parseInt((String) valor));
+                linhas.get(linha).setAno((String) valor);
                 break;
             case 4:
-                linhas.get(linha).setIsDisponivel(Boolean.parseBoolean((String) valor));
+                linhas.get(linha).setEditora((String) valor);
+                break;
+            case 5:
+                linhas.get(linha).setQuantidade((String) valor);
                 break;
         }
     }
+    
+    public String getColumnName( int coluna ) {
+        return colunas[coluna];
+    }
 
-    public void addLivro(Livro l) {
-        linhas.add(l);
+    public void addLivro(Livro c) {
+        linhas.add(c);
         fireTableDataChanged();
     }
 

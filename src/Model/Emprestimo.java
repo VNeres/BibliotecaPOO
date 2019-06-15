@@ -8,12 +8,12 @@ public class Emprestimo {
     private int idLivro;
     private int idCliente;
     private Date DataEmprestimo;
-    private Date DataDevolucao;
+    private String DataDevolucao;
 
     public Emprestimo() {
     }
 
-    public Emprestimo(int Id, int idLivro, int idCliente, Date DataEmprestimo, Date DataDevolucao) {
+    public Emprestimo(int Id, int idLivro, int idCliente, Date DataEmprestimo, String DataDevolucao) {
         this.Id = Id;
         this.idLivro = idLivro;
         this.idCliente = idCliente;
@@ -53,11 +53,11 @@ public class Emprestimo {
         this.DataEmprestimo = DataEmprestimo;
     }
 
-    public Date getDataDevolucao() {
+    public String getDataDevolucao() {
         return DataDevolucao;
     }
 
-    public void setDataDevolucao(Date DataDevolucao) {
+    public void setDataDevolucao(String DataDevolucao) {
         this.DataDevolucao = DataDevolucao;
     }
 

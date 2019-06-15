@@ -1,13 +1,8 @@
 package View;
 
 import Model.Cliente;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -59,7 +54,7 @@ public class ClienteTM extends AbstractTableModel {
     public void setValueAt(Object valor, int linha, int coluna) {
         switch (coluna) {
             case 0:
-                linhas.get(linha).setId(Integer.parseInt((String) valor));
+                linhas.get(linha).setId((int) valor);
                 break;
             case 1:
                 linhas.get(linha).setNome((String) valor);
@@ -71,15 +66,16 @@ public class ClienteTM extends AbstractTableModel {
                 linhas.get(linha).setRg((String) valor);
                 break;
             case 4:
-                try {
-                    linhas.get(linha).setDataNascimento(new SimpleDateFormat("dd/MM/yyyy").parse((String) valor));
-                } catch (ParseException ex) {
-                    Logger.getLogger(ClienteTM.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                linhas.get(linha).setDataNascimento((String) valor);
                 break;
         }
     }
-    
+
+    @Override
+    public String getColumnName(int coluna) {
+        return colunas[coluna];
+    }
+
     public void addCLiente(Cliente c) {
         linhas.add(c);
         fireTableDataChanged();
@@ -94,23 +90,25 @@ public class ClienteTM extends AbstractTableModel {
         return linhas.get(indiceLinha);
     }
 
-    public List<Cliente> getCliente() {
+    public List<Cliente> getClientes() {
         return linhas;
+
     }
 
     public void setClientes(List<Cliente> clientes) {
         int tamanhoAntigo = this.getRowCount();
 
         linhas.addAll(clientes);
-        fireTableRowsInserted(tamanhoAntigo, this.getRowCount() - 1);
+        fireTableRowsInserted(tamanhoAntigo, this.getRowCount() + 1);
     }
 
     public void limpar() {
         linhas.clear();
         fireTableDataChanged();
+
     }
-    
-    public boolean isEmpty(){
+
+    public boolean isEmpty() {
         return linhas.isEmpty();
     }
 

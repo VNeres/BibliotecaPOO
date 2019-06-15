@@ -1,19 +1,15 @@
 package View;
 
 import Model.Emprestimo;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.table.AbstractTableModel;
 
 public class EmprestimoTM extends AbstractTableModel {
 
     private List<Emprestimo> linhas;
-    private String[] colunas = new String[]{"Código", "Livro Emprestado", "Emprestado Para", "Data Empréstimo", "Data Devolução"};
+    private String[] colunas = {"Código", "Livro Emprestado", "Emprestado Para", "Data Empréstimo", "Data Devolução"};
 
     public EmprestimoTM() {
         linhas = new ArrayList<Emprestimo>();
@@ -40,9 +36,9 @@ public class EmprestimoTM extends AbstractTableModel {
             case 0:
                 return linhas.get(linha).getId();
             case 1:
-                return linhas.get(linha).getIdCliente();
-            case 2:
                 return linhas.get(linha).getIdLivro();
+            case 2:
+                return linhas.get(linha).getIdCliente();
             case 3:
                 return linhas.get(linha).getDataEmprestimo();
             case 4:
@@ -68,13 +64,13 @@ public class EmprestimoTM extends AbstractTableModel {
                 linhas.get(linha).setDataEmprestimo(new Date());
                 break;
             case 4:
-                try {
-                    linhas.get(linha).setDataDevolucao(new SimpleDateFormat("dd/MM/yyyy").parse((String) valor));
-                } catch (ParseException ex) {
-                    Logger.getLogger(EmprestimoTM.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                linhas.get(linha).setDataDevolucao((String) valor);
                 break;
         }
+    }
+    
+    public String getColumnName( int coluna ) {
+        return colunas[coluna];
     }
     
     public void addEmprestimo(Emprestimo e) {
