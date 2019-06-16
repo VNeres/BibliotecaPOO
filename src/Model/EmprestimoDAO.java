@@ -35,18 +35,15 @@ public class EmprestimoDAO {
         }
     }
 
-    public int Inserir(Emprestimo emprestimo, int idLivro) throws SQLException {
+    public int Inserir(Emprestimo emprestimo) throws SQLException {
 
-        String sql = "INSERT INTO emprestimo (idLivro, idCliente, dataEmprestimo, dataDevolucao) values (?,?,?,?); "
-                + "UPDATE livros SET quantidade = quantidade -1 WHERE idLivro = ?";
+        String sql = "INSERT INTO emprestimo (idLivro, idCliente, dataEmprestimo, dataDevolucao) values (?,?,?,?)";
 
         stm = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-
         stm.setInt(1, emprestimo.getIdLivro());
         stm.setInt(2, emprestimo.getIdCliente());
         stm.setString(3, SimpleData.format(emprestimo.getDataEmprestimo()));
         stm.setString(4, emprestimo.getDataDevolucao());
-        stm.setInt(5, idLivro);
 
         stm.executeUpdate();
 
@@ -56,13 +53,14 @@ public class EmprestimoDAO {
         if (rs.next()) {
             emprestimo.setId(rs.getInt(1));
         }
-        
-        
+
+        decrementarLivro(emprestimo.getIdLivro());
+
         return emprestimo.getId();
     }
 
     public void Alterar(Emprestimo emprestimo) throws SQLException {
-        String sql = "UPDATE emprestimo set idCliente = ?, idLivro = ?, dataDevolucao = ? WHERE id = ?";
+        String sql = "UPDATE emprestimo set idCliente = ?, idLivro = ?, dataDevolucao = ? WHERE idEmprestimo = ?";
 
         stm = con.prepareStatement(sql);
         stm.setString(1, Integer.toString(emprestimo.getIdCliente()));
@@ -71,18 +69,39 @@ public class EmprestimoDAO {
         stm.setInt(4, emprestimo.getId());
 
         stm.executeUpdate();
+        
+        incrementarLivro(emprestimo.getIdLivro());
+        decrementarLivro(emprestimo.getIdLivro());
+    }
+
+    public void incrementarLivro(int idLivro) throws SQLException {
+        String sql = "UPDATE livros SET quantidade = quantidade + 1 where idLivro = ?";
+
+        stm = con.prepareStatement(sql);
+        stm.setInt(1, idLivro);
+
+        stm.executeUpdate();
+    }
+
+    public void decrementarLivro(int idLivro) throws SQLException {
+        String sql = "UPDATE livros SET quantidade = quantidade - 1 WHERE idLivro = ?";
+
+        stm = con.prepareStatement(sql);
+        stm.setInt(1, idLivro);
+
+        stm.executeUpdate();
     }
 
     public void Excluir(Emprestimo emprestimo) throws SQLException {
 
-        String sql = "DELETE FROM emprestimo WHERE idEmprestimo = ?;"
-                + "UPDATE livros SET quantidade = quantidade + 1 WHERE idLivro = ? ";
+        String sql = "DELETE FROM emprestimo WHERE idEmprestimo = ?;";
 
         stm = con.prepareStatement(sql);
         stm.setInt(1, emprestimo.getId());
-        stm.setInt(2, emprestimo.getIdLivro());
 
         stm.executeUpdate();
+        
+        decrementarLivro(emprestimo.getIdLivro());
     }
 
     public ArrayList<Emprestimo> ListaEmprestimos() throws SQLException {

@@ -86,10 +86,16 @@ public class ctrEmprestimo extends ClienteTM implements ActionListener, ListSele
                 Logger.getLogger(ctrEmprestimo.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else if (acao.getActionCommand().equals("Alterar")) {
-
+            try {
+                alterarLivro();
+            } catch (SQLException ex) {
+                Logger.getLogger(ctrEmprestimo.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ParseException ex) {
+                Logger.getLogger(ctrEmprestimo.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else if (acao.getActionCommand().equals("Devolver")) {
             try {
-                excluirEmprestimo();
+                devolverEmprestimo();
             } catch (SQLException ex) {
                 Logger.getLogger(ctrLivro.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ParseException ex) {
@@ -151,16 +157,16 @@ public class ctrEmprestimo extends ClienteTM implements ActionListener, ListSele
      flagInsAltCons = 'A';
      }
      }*/
-    private void excluirEmprestimo() throws SQLException, ParseException {
-        
+    private void devolverEmprestimo() throws SQLException, ParseException {
+
         operacao = 'E';
-        
+
         if (Integer.toString(id).equals(frmEmprestimos.getLblCodigo().getText())) {
-            int op = JOptionPane.showConfirmDialog(null, "Confirma a exclusão");
+            int op = JOptionPane.showConfirmDialog(null, "Confirma a devolução");
 
             if (op == 0) {
                 dao.Excluir(dadosFrmEmprestimo());
-                JOptionPane.showMessageDialog(null, "Exclusão realizada com sucesso!!!", "Exclusão", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Devolução realizada com sucesso!!!", "Devolução", JOptionPane.INFORMATION_MESSAGE);
                 listarEmprestimos();
                 limparCampos(frmEmprestimos.getPaEmprestimo());
             }
@@ -175,23 +181,36 @@ public class ctrEmprestimo extends ClienteTM implements ActionListener, ListSele
 
             int codEmprestimo;
 
-            int idLivro = livro.getId();
-
             if (operacao == 'A') {
 
                 if (quantidade == 0) {
                     JOptionPane.showMessageDialog(null, "O livro " + livro.getNome() + " não está disponível para empréstimo");
                 } else {
-                    codEmprestimo = dao.Inserir(dadosFrmEmprestimo(), idLivro);
+                    codEmprestimo = dao.Inserir(dadosFrmEmprestimo());
                     frmEmprestimos.getLblCodigo().setText(Integer.toString(codEmprestimo));
                     operacao = 'a';
 
                     listarEmprestimos();
+                    pesquisarLivro();
+                    pesquisarCliente();
                 }
             }
         } catch (NullPointerException e) {
             JOptionPane.showMessageDialog(null, "Os campos não podem ficar vazios");
         }
+    }
+
+    private void alterarLivro() throws SQLException, ParseException {
+        operacao = 'M';
+        if (Integer.toString(id).equals(frmEmprestimos.getLblCodigo().getText())) {
+            dao.Alterar(dadosFrmEmprestimo());
+            tabModel.setValueAt(frmEmprestimos.getTxtNomeLivro().getText(), frmEmprestimos.getTbEmprestimo().getSelectedRow(), 2);
+            tabModel.setValueAt(frmEmprestimos.getTxtNomeCliente().getText(), frmEmprestimos.getTbEmprestimo().getSelectedRow(), 3);
+            tabModel.setValueAt(frmEmprestimos.getTxtDataEmprestimo().getText(), frmEmprestimos.getTbEmprestimo().getSelectedRow(), 4);
+            tabModel.setValueAt(frmEmprestimos.getTxtDataDevolucao().getText(), frmEmprestimos.getTbEmprestimo().getSelectedRow(), 5);
+        }
+        limparCampos(frmEmprestimos.getPaEmprestimo());
+        listarEmprestimos();
     }
 
     public void listarEmprestimos() throws SQLException {
@@ -265,7 +284,7 @@ public class ctrEmprestimo extends ClienteTM implements ActionListener, ListSele
     private Emprestimo dadosFrmEmprestimo() throws ParseException {
         if (operacao == 'a') {
             emprestimo.setId(Integer.parseInt(frmEmprestimos.getLblCodigo().getText()));
-        }else if (operacao == 'E') {
+        } else if (operacao == 'E') {
             emprestimo.setId(Integer.parseInt(frmEmprestimos.getLblCodigo().getText()));
             frmEmprestimos.getTbEmprestimo().getSelectionModel().removeListSelectionListener(this);
         }
