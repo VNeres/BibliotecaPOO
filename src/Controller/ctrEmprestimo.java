@@ -50,6 +50,7 @@ public class ctrEmprestimo extends ClienteTM implements ActionListener, ListSele
     private SimpleDateFormat SimpleData = new SimpleDateFormat("dd/MM/yyyy");
 
     private EmprestimoDAO dao = new EmprestimoDAO();
+    Emprestimo emprestimo = new Emprestimo();
 
     /*
      *  Operações:
@@ -217,6 +218,7 @@ public class ctrEmprestimo extends ClienteTM implements ActionListener, ListSele
         try {
             cliente = dao.localizarCliente(frmEmprestimos.getTxtPesquisarCliente().getText());
             frmEmprestimos.getTxtNomeCliente().setText(cliente.getNome());
+            emprestimo.setIdCliente(cliente.getId());
             //frmEmprestimos.getLblCodigo().setText(frmEmprestimos.getTxtPesquisar().getText());
             System.out.println(cliente);
         } catch (NullPointerException e) {
@@ -230,6 +232,7 @@ public class ctrEmprestimo extends ClienteTM implements ActionListener, ListSele
             livro = dao.localizarLivro(Integer.parseInt(frmEmprestimos.getTxtPesquisarLivro().getText()));
             frmEmprestimos.getTxtNomeLivro().setText(livro.getNome());
             frmEmprestimos.getTxtNomeEditora().setText(livro.getEditora());
+            emprestimo.setIdLivro(livro.getId());
             //frmEmprestimos.getLblCodigo().setText(frmEmprestimos.getTxtPesquisar().getText());
             System.out.println(livro);
         } catch (NullPointerException e) {
@@ -260,7 +263,6 @@ public class ctrEmprestimo extends ClienteTM implements ActionListener, ListSele
     }
 
     private Emprestimo dadosFrmEmprestimo() throws ParseException {
-        Emprestimo emprestimo = new Emprestimo();
         if (operacao == 'a') {
             emprestimo.setId(Integer.parseInt(frmEmprestimos.getLblCodigo().getText()));
         }else if (operacao == 'E') {
@@ -268,8 +270,8 @@ public class ctrEmprestimo extends ClienteTM implements ActionListener, ListSele
             frmEmprestimos.getTbEmprestimo().getSelectionModel().removeListSelectionListener(this);
         }
 
-        emprestimo.setIdCliente(cliente.getId());
-        emprestimo.setIdLivro(livro.getId());
+        emprestimo.setIdCliente(emprestimo.getIdCliente());
+        emprestimo.setIdLivro(emprestimo.getIdLivro());
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         String data = dateFormat.format(date2);
         emprestimo.setDataEmprestimo(SimpleData.parse(data));

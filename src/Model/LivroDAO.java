@@ -47,9 +47,9 @@ public class LivroDAO {
         stm = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
         stm.setString(1, livro.getNome());
         stm.setString(2, livro.getAutor());
-        stm.setString(3, livro.getAno());
+        stm.setInt(3, Integer.parseInt(livro.getAno()));
         stm.setString(4, livro.getEditora());
-        stm.setString(5, livro.getQuantidade());
+        stm.setInt(5, Integer.parseInt(livro.getQuantidade()));
 
         stm.executeUpdate();
 

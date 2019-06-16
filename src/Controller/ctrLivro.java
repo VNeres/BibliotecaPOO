@@ -95,7 +95,11 @@ public class ctrLivro implements ActionListener, ListSelectionListener {
     public void actionPerformed(ActionEvent acao) {
 
         if (acao.getActionCommand().equals("Adicionar")) {
-            incluirLivro();
+            try {
+                incluirLivro();
+            } catch (SQLException ex) {
+                Logger.getLogger(ctrLivro.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } else if (acao.getActionCommand().equals("Alterar")) {
             try {
                 alterarLivro();
@@ -135,7 +139,7 @@ public class ctrLivro implements ActionListener, ListSelectionListener {
         frmLivros.getTbLivro().setModel(tabModel);
     }
 
-    private void incluirLivro() {
+    private void incluirLivro() throws SQLException {
         operacao = 'A';
 
         try {
@@ -147,12 +151,16 @@ public class ctrLivro implements ActionListener, ListSelectionListener {
                 tabModel.addLivro(dadosFrmLivro());
 
             }
-        } catch (SQLException e) {
-            System.err.println(e);
-        }
-        limparCampos(frmLivros.getPaLivro());
+        } catch (NullPointerException e) {
+            JOptionPane.showMessageDialog(null, "Os campos não podem ser vazios!!!");
+        } catch (NumberFormatException e ){
+            JOptionPane.showMessageDialog(null, "O campo ano e quantidade aceitam apenas números!!!");
+        } 
+            limparCampos(frmLivros.getPaLivro());
 
-    }
+        }
+
+    
 
     private void alterarLivro() throws SQLException {
         operacao = 'M';
@@ -168,7 +176,7 @@ public class ctrLivro implements ActionListener, ListSelectionListener {
         listarTodos();
     }
 
-    private void listarTodos() throws SQLException {
+    public void listarTodos() throws SQLException {
         frmLivros.getTbLivro().getSelectionModel().removeListSelectionListener(this);
         operacao = 'L';
         tabModel.limpar();

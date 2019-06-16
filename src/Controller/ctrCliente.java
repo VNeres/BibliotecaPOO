@@ -188,7 +188,7 @@ public class ctrCliente implements ActionListener, ListSelectionListener {
         frmClientes.getTbCliente().getSelectionModel().addListSelectionListener(this);
     }
 
-    private void listarTodos() throws SQLException {
+    public void listarTodos() throws SQLException {
         frmClientes.getTbCliente().getSelectionModel().removeListSelectionListener(this);
         operacao = 'L';
         tabModel.limpar();
