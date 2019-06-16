@@ -168,7 +168,7 @@ public class ctrLivro implements ActionListener, ListSelectionListener {
         listarTodos();
     }
 
-    public void listarTodos() throws SQLException {
+    private void listarTodos() throws SQLException {
         frmLivros.getTbLivro().getSelectionModel().removeListSelectionListener(this);
         operacao = 'L';
         tabModel.limpar();

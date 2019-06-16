@@ -17,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -27,7 +28,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-
 
 /**
  *
@@ -46,11 +46,11 @@ public class ctrEmprestimo extends ClienteTM implements ActionListener, ListSele
     private int id;
     private LocalDate hoje = LocalDate.now();
     private Date date2 = java.sql.Date.valueOf(hoje);
-    
-    
+
+    private SimpleDateFormat SimpleData = new SimpleDateFormat("dd/MM/yyyy");
 
     private EmprestimoDAO dao = new EmprestimoDAO();
-    
+
     /*
      *  Operações:
      *  N = nenhuma(padrão)
@@ -61,11 +61,10 @@ public class ctrEmprestimo extends ClienteTM implements ActionListener, ListSele
      *  L = Listar
      * Will.
      */
-
     private char operacao = 'N';
 
     public ctrEmprestimo() throws SQLException {
-        listarTodos();
+        listarEmprestimos();
     }
 
     public ctrEmprestimo(JFEmprestimo frmEmprestimos) {
@@ -86,8 +85,8 @@ public class ctrEmprestimo extends ClienteTM implements ActionListener, ListSele
                 Logger.getLogger(ctrEmprestimo.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else if (acao.getActionCommand().equals("Alterar")) {
-            
-        } else if (acao.getActionCommand().equals("Excluir")) {
+
+        } else if (acao.getActionCommand().equals("Devolver")) {
             try {
                 excluirEmprestimo();
             } catch (SQLException ex) {
@@ -95,15 +94,15 @@ public class ctrEmprestimo extends ClienteTM implements ActionListener, ListSele
             } catch (ParseException ex) {
                 Logger.getLogger(ctrEmprestimo.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else if (acao.getActionCommand().equals("Listar Todos")) {
+        } else if (acao.getActionCommand().equals("Listar Empréstimos")) {
             try {
-                listarTodos();
+                listarEmprestimos();
             } catch (SQLException ex) {
                 Logger.getLogger(ctrLivro.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else if (acao.getActionCommand().equals("Buscar")) {
             try {
-                pesquisarLivro();
+                pesquisarEmprestimo();
             } catch (SQLException ex) {
                 Logger.getLogger(ctrLivro.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -141,76 +140,105 @@ public class ctrEmprestimo extends ClienteTM implements ActionListener, ListSele
         frmEmprestimos.getBtDevolver().addActionListener(this);
         frmEmprestimos.getBtnPesquisarLivro().addActionListener(this);
         frmEmprestimos.getBtnPesquisarCliente().addActionListener(this);
+        frmEmprestimos.getBtnListarEmprestimos().addActionListener(this);
         frmEmprestimos.getTbEmprestimo().getSelectionModel().addListSelectionListener(this);
     }
 
-  /*  private void alterarEmprestimo() {
-        if ("".equals(frmEmprestimos.getLblCodigo().getText())) {
-            habilitaBotoesSalvar();
-            flagInsAltCons = 'A';
-        }
-    }*/
-
+    /*  private void alterarEmprestimo() {
+     if ("".equals(frmEmprestimos.getLblCodigo().getText())) {
+     habilitaBotoesSalvar();
+     flagInsAltCons = 'A';
+     }
+     }*/
     private void excluirEmprestimo() throws SQLException, ParseException {
-
-        if ("".equals(frmEmprestimos.getLblCodigo().getText())) {
+        
+        operacao = 'E';
+        
+        if (Integer.toString(id).equals(frmEmprestimos.getLblCodigo().getText())) {
             int op = JOptionPane.showConfirmDialog(null, "Confirma a exclusão");
 
             if (op == 0) {
                 dao.Excluir(dadosFrmEmprestimo());
                 JOptionPane.showMessageDialog(null, "Exclusão realizada com sucesso!!!", "Exclusão", JOptionPane.INFORMATION_MESSAGE);
-                listarTodos();
+                listarEmprestimos();
                 limparCampos(frmEmprestimos.getPaEmprestimo());
             }
         }
     }
 
-    private void incluirEmprestimo() throws SQLException, ParseException{
+    private void incluirEmprestimo() throws SQLException, ParseException {
         operacao = 'A';
-        
-        if(operacao == 'A'){
-            int codLivro;
-            codLivro = dao.Inserir(dadosFrmEmprestimo());
-            frmEmprestimos.getLblCodigo().setText(Integer.toString(codLivro));
-            operacao = 'a';
-            tabModel.addEmprestimo(dadosFrmEmprestimo());
+
+        try {
+            int quantidade = Integer.parseInt(livro.getQuantidade());
+
+            int codEmprestimo;
+
+            int idLivro = livro.getId();
+
+            if (operacao == 'A') {
+
+                if (quantidade == 0) {
+                    JOptionPane.showMessageDialog(null, "O livro " + livro.getNome() + " não está disponível para empréstimo");
+                } else {
+                    codEmprestimo = dao.Inserir(dadosFrmEmprestimo(), idLivro);
+                    frmEmprestimos.getLblCodigo().setText(Integer.toString(codEmprestimo));
+                    operacao = 'a';
+
+                    listarEmprestimos();
+                }
+            }
+        } catch (NullPointerException e) {
+            JOptionPane.showMessageDialog(null, "Os campos não podem ficar vazios");
         }
     }
 
-    private void listarTodos() throws SQLException {
+    public void listarEmprestimos() throws SQLException {
+        frmEmprestimos.getTbEmprestimo().getSelectionModel().removeListSelectionListener(this);
+        operacao = 'L';
         tabModel.limpar();
         tabModel.setEmprestimos(dao.ListaEmprestimos());
-        frmEmprestimos.getBtAlterar().setEnabled(true);
-        frmEmprestimos.getBtDevolver().setEnabled(true);
+        frmEmprestimos.getTbEmprestimo().getSelectionModel().addListSelectionListener(this);
     }
 
     private void pesquisarEmprestimo() throws SQLException {
-        
-        Emprestimo livro;
-        
-        livro = dao.localizarEmprestimo(frmEmprestimos.getTxtPesquisar().getText());
-        dadosEmprestimoFrm(livro);
-    }
-    
-    private void pesquisarCliente() throws SQLException {
-        cliente = dao.localizarCliente(frmEmprestimos.getTxtPesquisarCliente().getText());
-        frmEmprestimos.getTxtNomeCliente().setText(cliente.getNome());
-        //frmEmprestimos.getLblCodigo().setText(frmEmprestimos.getTxtPesquisar().getText());
-        System.out.println(cliente);
-        
-        
-    }
-    
-    private void pesquisarLivro() throws SQLException {
-        livro = dao.localizarLivro(Integer.parseInt(frmEmprestimos.getTxtPesquisarLivro().getText()));
-        frmEmprestimos.getTxtNomeLivro().setText(livro.getNome());
-        frmEmprestimos.getTxtNomeEditora().setText(livro.getEditora());
-        //frmEmprestimos.getLblCodigo().setText(frmEmprestimos.getTxtPesquisar().getText());
-        System.out.println(livro);
-        
-        
+        try {
+            Emprestimo emprestimo;
+            emprestimo = dao.localizarEmprestimo(Integer.parseInt(frmEmprestimos.getTxtPesquisar().getText()));
+            dadosEmprestimoFrm(emprestimo);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Por favor, digite apenas números");
+        } catch (NullPointerException e) {
+            JOptionPane.showMessageDialog(null, "Empréstimo não encontrado, tente novamente!");
+        }
     }
 
+    private void pesquisarCliente() throws SQLException {
+        try {
+            cliente = dao.localizarCliente(frmEmprestimos.getTxtPesquisarCliente().getText());
+            frmEmprestimos.getTxtNomeCliente().setText(cliente.getNome());
+            //frmEmprestimos.getLblCodigo().setText(frmEmprestimos.getTxtPesquisar().getText());
+            System.out.println(cliente);
+        } catch (NullPointerException e) {
+            JOptionPane.showMessageDialog(null, "Cliente não encontrado, tente novamente!");
+        }
+
+    }
+
+    private void pesquisarLivro() throws SQLException {
+        try {
+            livro = dao.localizarLivro(Integer.parseInt(frmEmprestimos.getTxtPesquisarLivro().getText()));
+            frmEmprestimos.getTxtNomeLivro().setText(livro.getNome());
+            frmEmprestimos.getTxtNomeEditora().setText(livro.getEditora());
+            //frmEmprestimos.getLblCodigo().setText(frmEmprestimos.getTxtPesquisar().getText());
+            System.out.println(livro);
+        } catch (NullPointerException e) {
+            JOptionPane.showMessageDialog(null, "Livro não encontrado, tente novamente!");
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Digite apenas números!!!");
+        }
+
+    }
 
     private void limparCampos(JPanel panel) {
         Component[] componente = panel.getComponents();
@@ -225,22 +253,29 @@ public class ctrEmprestimo extends ClienteTM implements ActionListener, ListSele
     private void dadosEmprestimoFrm(Emprestimo emprestimo) {
         id = emprestimo.getId();
         frmEmprestimos.getLblCodigo().setText("" + emprestimo.getId());
-        frmEmprestimos.getTxtNomeCliente().setText(cliente.getNome());
-        frmEmprestimos.getTxtNomeLivro().setText(livro.getNome());
+        frmEmprestimos.getTxtNomeCliente().setText(emprestimo.getCliente());
+        frmEmprestimos.getTxtNomeLivro().setText(emprestimo.getLivro());
+        frmEmprestimos.getTxtDataDevolucao().setText(emprestimo.getDataDevolucao());
+        frmEmprestimos.getTxtDataEmprestimo().setText(SimpleData.format(emprestimo.getDataEmprestimo()));
     }
 
     private Emprestimo dadosFrmEmprestimo() throws ParseException {
         Emprestimo emprestimo = new Emprestimo();
         if (operacao == 'a') {
             emprestimo.setId(Integer.parseInt(frmEmprestimos.getLblCodigo().getText()));
-            emprestimo.setDataEmprestimo(date2);
+        }else if (operacao == 'E') {
+            emprestimo.setId(Integer.parseInt(frmEmprestimos.getLblCodigo().getText()));
+            frmEmprestimos.getTbEmprestimo().getSelectionModel().removeListSelectionListener(this);
         }
-        
+
         emprestimo.setIdCliente(cliente.getId());
         emprestimo.setIdLivro(livro.getId());
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        String data = dateFormat.format(date2);
+        emprestimo.setDataEmprestimo(SimpleData.parse(data));
         emprestimo.setDataDevolucao(frmEmprestimos.getTxtDataDevolucao().getText());
-        
-        return emprestimo;        
+
+        return emprestimo;
     }
-    
+
 }

@@ -28,7 +28,7 @@ public class DaoBasicoConexao {
      * localhost:8080 ou localhost:3306
      * Will.
      */
-    private String url = "jdbc:mysql://localhost/biblioteca";
+    private String url = "jdbc:mysql://localhost/biblioteca?allowMultiQueries=true";
     private String usuario = "root";
     private String senha = "";
     

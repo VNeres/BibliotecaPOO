@@ -188,7 +188,7 @@ public class ctrCliente implements ActionListener, ListSelectionListener {
         frmClientes.getTbCliente().getSelectionModel().addListSelectionListener(this);
     }
 
-    public void listarTodos() throws SQLException {
+    private void listarTodos() throws SQLException {
         frmClientes.getTbCliente().getSelectionModel().removeListSelectionListener(this);
         operacao = 'L';
         tabModel.limpar();
@@ -197,9 +197,15 @@ public class ctrCliente implements ActionListener, ListSelectionListener {
     }
 
     private void pesquisarCliente() throws SQLException {
-        Cliente cliente;
-        cliente = dao.localizarCliente(Integer.parseInt(frmClientes.getTxtPesquisar().getText()));
-        dadosClienteFrm(cliente);
+        try {
+            Cliente cliente;
+            cliente = dao.localizarCliente(Integer.parseInt(frmClientes.getTxtPesquisar().getText()));
+            dadosClienteFrm(cliente);
+        }catch(NullPointerException e){
+            JOptionPane.showMessageDialog(null, "Cliente não encontrado, tente novamente!!");
+        }catch(NumberFormatException e ){
+            JOptionPane.showMessageDialog(null, "Por favor, digite apenas números");
+        }
     }
 
     private void limparCampos(JPanel panel) {

@@ -36,7 +36,6 @@ public class JFCliente extends javax.swing.JFrame {
         setLocationRelativeTo(null);
 
         listener = new ctrCliente(this);
-        listener.listarTodos();
 
     }
 

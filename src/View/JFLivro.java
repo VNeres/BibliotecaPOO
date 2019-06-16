@@ -33,8 +33,6 @@ public class JFLivro extends javax.swing.JFrame {
         setLocationRelativeTo(null);
 
         Listener = new ctrLivro(this);
-        
-        Listener.listarTodos();
     }
 
     /**
