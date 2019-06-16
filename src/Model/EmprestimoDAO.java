@@ -60,18 +60,13 @@ public class EmprestimoDAO {
     }
 
     public void Alterar(Emprestimo emprestimo) throws SQLException {
-        String sql = "UPDATE emprestimo set idCliente = ?, idLivro = ?, dataDevolucao = ? WHERE idEmprestimo = ?";
+        String sql = "UPDATE emprestimo set dataDevolucao = ? WHERE idEmprestimo = ?";
 
         stm = con.prepareStatement(sql);
-        stm.setString(1, Integer.toString(emprestimo.getIdCliente()));
-        stm.setString(2, Integer.toString(emprestimo.getIdLivro()));
-        stm.setString(3, emprestimo.getDataDevolucao());
-        stm.setInt(4, emprestimo.getId());
+        stm.setString(1,emprestimo.getDataDevolucao());
+        stm.setInt(2, emprestimo.getId());
 
         stm.executeUpdate();
-        
-        incrementarLivro(emprestimo.getIdLivro());
-        decrementarLivro(emprestimo.getIdLivro());
     }
 
     public void incrementarLivro(int idLivro) throws SQLException {
@@ -101,7 +96,7 @@ public class EmprestimoDAO {
 
         stm.executeUpdate();
         
-        decrementarLivro(emprestimo.getIdLivro());
+        incrementarLivro(emprestimo.getIdLivro());
     }
 
     public ArrayList<Emprestimo> ListaEmprestimos() throws SQLException {

@@ -16,7 +16,6 @@ public class EmprestimoTM extends AbstractTableModel {
 
     private List<Emprestimo> linhas;
     private String[] colunas = {"Código", "Livro Emprestado", "Emprestado Para", "Data Empréstimo", "Data Devolução"};
-    
 
     public EmprestimoTM() {
         linhas = new ArrayList<Emprestimo>();
@@ -62,21 +61,6 @@ public class EmprestimoTM extends AbstractTableModel {
                 linhas.get(linha).setId(Integer.parseInt((String) valor));
                 break;
             case 1:
-                linhas.get(linha).setIdCliente(Integer.parseInt((String) valor));
-                break;
-            case 2:
-                linhas.get(linha).setIdLivro(Integer.parseInt((String) valor));
-                break;
-            case 3: {
-
-                try {
-                    linhas.get(linha).setDataEmprestimo(SimpleData.parse((String)valor));
-                } catch (ParseException ex) {
-                    Logger.getLogger(EmprestimoTM.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-            break;
-            case 4:
                 linhas.get(linha).setDataDevolucao((String) valor);
                 break;
         }

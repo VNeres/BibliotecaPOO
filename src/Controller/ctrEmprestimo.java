@@ -204,10 +204,7 @@ public class ctrEmprestimo extends ClienteTM implements ActionListener, ListSele
         operacao = 'M';
         if (Integer.toString(id).equals(frmEmprestimos.getLblCodigo().getText())) {
             dao.Alterar(dadosFrmEmprestimo());
-            tabModel.setValueAt(frmEmprestimos.getTxtNomeLivro().getText(), frmEmprestimos.getTbEmprestimo().getSelectedRow(), 2);
-            tabModel.setValueAt(frmEmprestimos.getTxtNomeCliente().getText(), frmEmprestimos.getTbEmprestimo().getSelectedRow(), 3);
-            tabModel.setValueAt(frmEmprestimos.getTxtDataEmprestimo().getText(), frmEmprestimos.getTbEmprestimo().getSelectedRow(), 4);
-            tabModel.setValueAt(frmEmprestimos.getTxtDataDevolucao().getText(), frmEmprestimos.getTbEmprestimo().getSelectedRow(), 5);
+            tabModel.setValueAt(frmEmprestimos.getTxtDataDevolucao().getText(), frmEmprestimos.getTbEmprestimo().getSelectedRow(), 1);
         }
         limparCampos(frmEmprestimos.getPaEmprestimo());
         listarEmprestimos();
