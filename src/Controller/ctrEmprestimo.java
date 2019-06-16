@@ -275,7 +275,7 @@ public class ctrEmprestimo extends ClienteTM implements ActionListener, ListSele
         frmEmprestimos.getTxtNomeCliente().setText(emprestimo.getCliente());
         frmEmprestimos.getTxtNomeLivro().setText(emprestimo.getLivro());
         frmEmprestimos.getTxtDataDevolucao().setText(emprestimo.getDataDevolucao());
-        frmEmprestimos.getTxtDataEmprestimo().setText(SimpleData.format(emprestimo.getDataEmprestimo()));
+        frmEmprestimos.getTxtDataEmprestimo().setText(emprestimo.getDataEmprestimo());
     }
 
     private Emprestimo dadosFrmEmprestimo() throws ParseException {
@@ -290,7 +290,7 @@ public class ctrEmprestimo extends ClienteTM implements ActionListener, ListSele
         emprestimo.setIdLivro(emprestimo.getIdLivro());
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         String data = dateFormat.format(date2);
-        emprestimo.setDataEmprestimo(SimpleData.parse(data));
+        emprestimo.setDataEmprestimo(data);
         emprestimo.setDataDevolucao(frmEmprestimos.getTxtDataDevolucao().getText());
 
         return emprestimo;

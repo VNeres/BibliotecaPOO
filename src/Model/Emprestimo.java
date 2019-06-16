@@ -7,7 +7,7 @@ public class Emprestimo {
     private int Id;
     private int idLivro;
     private int idCliente;
-    private Date DataEmprestimo;
+    private String DataEmprestimo;
     private String DataDevolucao;
     private String livro;
     private String cliente;
@@ -15,7 +15,7 @@ public class Emprestimo {
     public Emprestimo() {
     }
 
-    public Emprestimo(int Id, int idLivro, int idCliente,  Date DataEmprestimo, String DataDevolucao) {
+    public Emprestimo(int Id, int idLivro, int idCliente,  String DataEmprestimo, String DataDevolucao) {
         this.Id = Id;
         this.idLivro = idLivro;
         this.idCliente = idCliente;
@@ -23,7 +23,7 @@ public class Emprestimo {
         this.DataDevolucao = DataDevolucao;
     }
 
-    public Emprestimo(int Id, String livro, String cliente, Date DataEmprestimo, String DataDevolucao) {
+    public Emprestimo(int Id, String livro, String cliente, String DataEmprestimo, String DataDevolucao) {
         this.Id = Id;
         this.DataEmprestimo = DataEmprestimo;
         this.DataDevolucao = DataDevolucao;
@@ -58,11 +58,11 @@ public class Emprestimo {
         this.idCliente = idCliente;
     }
 
-    public Date getDataEmprestimo() {
+    public String getDataEmprestimo() {
         return DataEmprestimo;
     }
 
-    public void setDataEmprestimo(Date DataEmprestimo) {
+    public void setDataEmprestimo(String DataEmprestimo) {
         this.DataEmprestimo = DataEmprestimo;
     }
 

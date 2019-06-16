@@ -42,7 +42,7 @@ public class EmprestimoDAO {
         stm = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
         stm.setInt(1, emprestimo.getIdLivro());
         stm.setInt(2, emprestimo.getIdCliente());
-        stm.setString(3, SimpleData.format(emprestimo.getDataEmprestimo()));
+        stm.setString(3, emprestimo.getDataEmprestimo());
         stm.setString(4, emprestimo.getDataDevolucao());
 
         stm.executeUpdate();
@@ -115,7 +115,7 @@ public class EmprestimoDAO {
             emprestimos.add(new Emprestimo(rs.getInt(1),
                     rs.getString(2),
                     rs.getString(3),
-                    rs.getDate(4),
+                    rs.getString(4),
                     rs.getString(5)));
         }
         return emprestimos;
@@ -138,7 +138,7 @@ public class EmprestimoDAO {
             emprestimo = new Emprestimo(rs.getInt(1),
                     rs.getString(2),
                     rs.getString(3),
-                    rs.getDate(4),
+                    rs.getString(4),
                     rs.getString(5));
         }
         return emprestimo;
